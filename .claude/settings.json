@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"require.resolve\\('playwright'\\)\")",
+      "Bash(mkdir -p /private/tmp/claude-501/-Users-lethanh-Documents-Documents---LeThanh-s-MacBook-Pro-Home-webvocab/2165e945-7f3c-4c5e-809f-b005a9aa9643/scratchpad/pw)",
+      "Bash(npm init *)",
+      "Bash(npx playwright *)",
+      "Bash(node drive.js)",
+      "Bash(mysql -u root -p123456 webvocab -e \"DELETE FROM vocabulary;\")",
+      "Bash(pkill -f \"node server.js\")",
+      "Bash(node server.js)",
+      "Bash(curl -sf http://localhost:3000)",
+      "Bash(node drive-dark.js)",
+      "Bash(mysql -u root -p123456 webvocab -e \"SELECT id, word, status FROM vocabulary ORDER BY id;\")",
+      "Bash(mysql -u root -p123456 webvocab -e \"DESCRIBE vocabulary;\")",
+      "Bash(mysql -u root -p123456 webvocab -e \"DESCRIBE vocabulary; SELECT id, word, flashcard_done, quiz_done, fill_done FROM vocabulary ORDER BY id;\")",
+      "Bash(mysql -u root -p123456 webvocab -e \"UPDATE vocabulary SET flashcard_done=0, quiz_done=0, fill_done=0 WHERE id=4;\")",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);console.log\\('remaining',j.remaining,'total',j.total,'ids',j.batch.map\\(w=>w.id\\)\\)}\\)\")",
+      "Bash(curl -s \"http://localhost:3000/api/vocab?search=Proficiency\")",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>console.log\\(JSON.parse\\(d\\)\\)\\)\")",
+      "Bash(curl -s -X POST http://localhost:3000/api/vocab/study/mark -H \"Content-Type: application/json\" -d '{\"id\":4,\"mode\":\"quiz\",\"done\":true}')",
+      "Bash(curl -s -X POST http://localhost:3000/api/vocab/study/mark -H \"Content-Type: application/json\" -d '{\"id\":4,\"mode\":\"fill\",\"done\":true}')",
+      "Bash(curl -s 'http://localhost:3000/api/vocab/study/batch?date=2026-07-05&mode=fill')",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);console.log\\('remaining',j.remaining,'total',j.total\\)}\\)\")",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>console.log\\(JSON.parse\\(d\\)[0].status\\)\\)\")",
+      "Bash(mysql -u root -p123456 webvocab -e \"UPDATE vocabulary SET flashcard_done=1, quiz_done=1, fill_done=1 WHERE id=4; SELECT id,word,flashcard_done,quiz_done,fill_done FROM vocabulary WHERE id=4;\")",
+      "Bash(mysql -u root -p123456 webvocab -e \"UPDATE vocabulary SET quiz_done=1, fill_done=1;\")",
+      "Bash(mysql -u root -p123456 webvocab -e \"SELECT id,word,flashcard_done,quiz_done,fill_done FROM vocabulary ORDER BY id;\")",
+      "Bash(curl -s \"http://localhost:3000/api/vocab/review/batch?count=10\")",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);console.log\\('total',j.total,'batch size',j.batch.length, 'ids', j.batch.map\\(w=>w.id\\)\\)}\\)\")",
+      "Bash(kill 86532)",
+      "Bash(mysql -u root -p123456 webvocab -e \"SELECT id,word,flashcard_done,quiz_done,fill_done FROM vocabulary WHERE id=12;\")",
+      "Bash(curl -s -X POST http://localhost:3000/api/vocab/study/mark -H \"Content-Type: application/json\" -d '{\"id\":12,\"mode\":\"all\",\"done\":false}')",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);console.log\\('total',j.total\\)}\\)\")",
+      "Bash(mysql -u root -p123456 webvocab -e \"UPDATE vocabulary SET flashcard_done=1, quiz_done=1, fill_done=1 WHERE id=12;\")",
+      "Bash(node drive-review.js)"
+    ]
+  }
+}

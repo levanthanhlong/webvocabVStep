@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VSTEP Vocab</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="app-shell">
+  <header class="app-header">
+    <h1>VSTEP<span class="accent">Vocab</span></h1>
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="import">Nạp từ vựng</button>
+      <button class="tab-btn" data-tab="list">Danh sách từ vựng</button>
+      <button class="tab-btn" data-tab="study">Học thuộc theo lần nạp</button>
+      <button class="tab-btn" data-tab="by-date">Xem theo lần nạp</button>
+      <button class="tab-btn" data-tab="skill">Kỹ năng</button>
+      <button class="tab-btn" data-tab="dictionary">Từ điển</button>
+    </nav>
+  </header>
+
+  <main class="app-main">
+
+    <!-- TAB: Nạp từ vựng -->
+    <section id="tab-import" class="tab-panel active">
+      <h2>Nạp từ vựng mới</h2>
+      <p class="hint">Dán nguyên khối theo định dạng: <code>N. word /phiên âm/ (loại từ): nghĩa -&gt; ví dụ</code></p>
+      <textarea id="import-textarea" rows="12" placeholder="1. abandon /ơ-ben-đần/ (v): từ bỏ -> He abandoned the project."></textarea>
+      <div class="actions">
+        <button id="import-submit" class="btn-primary">Nạp vào hệ thống</button>
+        <span id="import-status" class="status-text"></span>
+      </div>
+      <div id="import-result"></div>
+    </section>
+
+    <!-- TAB: Danh sách từ vựng -->
+    <section id="tab-list" class="tab-panel">
+      <h2>Danh sách từ vựng</h2>
+      <input type="search" id="list-search" placeholder="Tìm theo từ hoặc nghĩa..." class="search-input" />
+      <div id="list-container" class="vocab-list"></div>
+    </section>
+
+    <!-- TAB: Học thuộc theo lần nạp -->
+    <section id="tab-study" class="tab-panel">
+      <h2>Học thuộc theo lần nạp</h2>
+      <div class="study-controls">
+        <select id="study-date-select"></select>
+        <div class="mode-switch">
+          <button class="mode-btn" data-mode="flashcard">Flashcard</button>
+          <button class="mode-btn" data-mode="quiz">Trắc nghiệm</button>
+          <button class="mode-btn" data-mode="fill">Điền từ</button>
+          <button class="mode-btn" data-mode="test">Bài test</button>
+          <button class="mode-btn" data-mode="review">Ôn lại</button>
+        </div>
+      </div>
+      <p id="study-progress" class="progress-text"></p>
+      <div id="study-stage" class="study-stage"></div>
+    </section>
+
+    <!-- TAB: Xem theo lần nạp -->
+    <section id="tab-by-date" class="tab-panel">
+      <h2>Xem theo lần nạp</h2>
+      <div class="study-controls">
+        <select id="by-date-select"></select>
+        <button id="reset-batch-btn" class="btn-secondary">Học lại từ đầu (lần này)</button>
+        <button id="delete-batch-btn" class="btn-secondary">Xóa cả lần nạp này</button>
+      </div>
+      <div class="study-controls">
+        <button id="delete-selected-btn" class="btn-secondary" disabled>Xóa các từ đã chọn (0)</button>
+      </div>
+      <div id="by-date-container" class="vocab-list"></div>
+    </section>
+
+    <!-- TAB: Kỹ năng -->
+    <section id="tab-skill" class="tab-panel">
+      <h2>Kỹ năng</h2>
+      <div class="mode-switch">
+        <button class="mode-btn" data-skill="reading">Reading</button>
+        <button class="mode-btn" data-skill="listening">Listening</button>
+        <button class="mode-btn" data-skill="writing">Writing</button>
+        <button class="mode-btn" data-skill="speaking">Speaking</button>
+      </div>
+      <div id="skill-content" class="skill-content"></div>
+    </section>
+
+    <!-- TAB: Từ điển -->
+    <section id="tab-dictionary" class="tab-panel">
+      <h2>Từ điển</h2>
+      <div class="dictionary-search">
+        <input type="text" id="dictionary-input" placeholder="Nhập từ tiếng Anh cần tra (vd: abandon)..." />
+        <button id="dictionary-search-btn" class="btn-primary">Tra từ</button>
+      </div>
+      <div id="dictionary-result"></div>
+    </section>
+
+  </main>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/speech.js"></script>
+<script src="js/tabImport.js"></script>
+<script src="js/tabList.js"></script>
+<script src="js/tabStudy.js"></script>
+<script src="js/tabByDate.js"></script>
+<script src="js/tabSkill.js"></script>
+<script src="js/tabDictionary.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
