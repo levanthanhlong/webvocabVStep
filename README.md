@@ -134,7 +134,7 @@ Ví dụ:
 
 Dòng sai định dạng sẽ bị bỏ qua và báo lỗi kèm số dòng, không chặn các dòng còn lại. Phiên âm IPA (`phonetic_ipa`) được tự động tra cứu qua Dictionary API; từ nào không tìm thấy sẽ để trống và có thể sửa tay ở tab "Danh sách từ vựng".
 
-## 6 tab chính
+## 8 tab chính
 
 | Tab | Chức năng |
 |---|---|
@@ -143,7 +143,8 @@ Dòng sai định dạng sẽ bị bỏ qua và báo lỗi kèm số dòng, khô
 | **Học thuộc theo lần nạp** | Chọn lần nạp, học theo lô 10 từ/lần với 5 chế độ: Flashcard / Trắc nghiệm / Điền từ vào câu / Bài test / Ôn lại — mỗi chế độ đều hiện kèm loại từ (n/v/adj...) |
 | **Xem theo lần nạp** | Xem toàn bộ từ của 1 lần nạp cụ thể, không giới hạn. Có nút "Học lại từ đầu (lần này)" để reset tiến độ 3 chế độ về 0, "Xóa cả lần nạp này" nếu nạp nhầm, chọn nhiều từ (checkbox) để xóa hàng loạt, và xóa từng từ riêng lẻ (🗑) — có ở cả tab này lẫn "Danh sách từ vựng" |
 | **Kỹ năng** | 4 tab con Reading / Listening / Writing / Speaking, hiển thị nội dung từ file tương ứng trong thư mục `docs/` (bạn tự chỉnh sửa nội dung, hiển thị dạng text thuần) |
-| **Từ điển** | Tra bất kỳ từ tiếng Anh nào (không giới hạn trong DB của bạn) — IPA, nghĩa tiếng Việt, định nghĩa tiếng Anh theo loại từ, ví dụ, từ đồng nghĩa. Chỉ để tra cứu tham khảo, không lưu vào DB |
+| **Từ điển** | Tra 2 chiều Anh↔Việt, bất kỳ từ nào (không giới hạn trong DB của bạn), trả về **nhiều nghĩa** (tối đa 5) chứ không chỉ 1. Anh→Việt: IPA, các nghĩa tiếng Việt, định nghĩa tiếng Anh theo loại từ, ví dụ, từ đồng nghĩa. Việt→Anh: các bản dịch tiếng Anh, tự tra thêm định nghĩa/IPA cho bản dịch đầu tiên nếu khớp từ điển. Đổi chiều sẽ xóa input/kết quả cũ. Chỉ để tra cứu tham khảo, không lưu vào DB |
+| **Dịch thuật** | Dịch cả đoạn văn bản (không chỉ 1 từ) 2 chiều Anh↔Việt, tối đa 500 ký tự/lần |
 
 Chế độ học được lưu vào `localStorage` để giữ nguyên lựa chọn ở lần sau.
 
@@ -166,13 +167,15 @@ POST   /api/vocab/by-batch/:batch/reset          Reset flashcard_done/quiz_done/
 GET    /api/vocab/study/batch?batch=&mode=       Lô 10 từ chưa xong ở đúng mode (flashcard/quiz/fill) trong 1 lần nạp + số còn lại
 GET    /api/vocab/review/batch?count=           N từ ngẫu nhiên đã "Đã thuộc" trong toàn bộ DB để ôn lại
 POST   /api/vocab/study/mark                    Body { id, mode, done } — mode: flashcard/quiz/fill/all
-GET    /api/vocab/random?exclude_id=&count=     N từ ngẫu nhiên làm đáp án nhiễu (trắc nghiệm)
+GET    /api/vocab/random?exclude_id=&count=&word_type=&is_phrase=   N từ ngẫu nhiên làm đáp án nhiễu (trắc nghiệm) — ưu tiên cùng word_type và cùng dạng cụm/từ đơn; không đủ thì lấy thêm từ bất kỳ
 PUT    /api/vocab/:id                           Sửa tay phiên âm IPA hoặc thông tin từ
 DELETE /api/vocab/:id                           Xóa 1 từ
 POST   /api/vocab/bulk-delete                   Body { ids: [...] } — xóa nhiều từ cùng lúc
 DELETE /api/vocab/by-batch/:batch                Xóa toàn bộ từ trong 1 lần nạp (dùng khi nạp nhầm)
 GET    /api/docs/:skill                          Nội dung file docs/<skill>.md — skill: reading/listening/writing/speaking
-GET    /api/dictionary/:word                     Tra 1 từ tiếng Anh bất kỳ — IPA, nghĩa tiếng Việt, định nghĩa/ví dụ/đồng nghĩa tiếng Anh
+GET    /api/dictionary/:word                     Tra 1 từ tiếng Anh — IPA, meanings_vi (mảng, tối đa 5 nghĩa), định nghĩa/ví dụ/đồng nghĩa tiếng Anh
+GET    /api/dictionary/vi/:word                  Tra 1 từ tiếng Việt — translated_en (mảng, tối đa 5 bản dịch), định nghĩa tiếng Anh cho bản dịch đầu tiên
+POST   /api/translate                            Body { text, from, to } — dịch đoạn văn bản (tối đa 500 ký tự)
 ```
 
 ## Bảng `vocabulary`

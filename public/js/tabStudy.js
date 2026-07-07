@@ -196,7 +196,8 @@ const tabStudy = {
   },
 
   async renderQuiz(stage, word) {
-    const distractors = await api.randomDistractors(word.id, 3);
+    const isPhrase = word.word.includes(' ');
+    const distractors = await api.randomDistractors(word.id, 3, word.word_type, isPhrase);
     const options = this.shuffle([{ id: word.id, meaning: word.meaning }, ...distractors]);
 
     stage.innerHTML = `
@@ -280,7 +281,8 @@ const tabStudy = {
   },
 
   async renderReview(stage, word) {
-    const distractors = await api.randomDistractors(word.id, 3);
+    const isPhrase = word.word.includes(' ');
+    const distractors = await api.randomDistractors(word.id, 3, word.word_type, isPhrase);
     const options = this.shuffle([{ id: word.id, meaning: word.meaning }, ...distractors]);
 
     stage.innerHTML = `
@@ -342,7 +344,8 @@ const tabStudy = {
   },
 
   async renderTestQuiz(stage, word) {
-    const distractors = await api.randomDistractors(word.id, 3);
+    const isPhrase = word.word.includes(' ');
+    const distractors = await api.randomDistractors(word.id, 3, word.word_type, isPhrase);
     const options = this.shuffle([{ id: word.id, meaning: word.meaning }, ...distractors]);
 
     stage.innerHTML = `

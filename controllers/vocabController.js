@@ -157,13 +157,43 @@ async function markStudy(req, res) {
 }
 
 async function randomDistractors(req, res) {
-  const { exclude_id, count } = req.query;
+  const { exclude_id, count, word_type, is_phrase } = req.query;
   const n = Number(count) || 3;
-  const [rows] = await pool.query(
-    'SELECT id, meaning FROM vocabulary WHERE id != ? ORDER BY RAND() LIMIT ?',
-    [Number(exclude_id) || 0, n]
+  const excludeId = Number(exclude_id) || 0;
+
+  // Prefer distractors of the same word type and same phrase-ness (both
+  // multi-word or both single-word) so the correct answer can't be
+  // guessed just by "the odd one out" shape.
+  const conditions = ['id != ?'];
+  const params = [excludeId];
+  if (word_type) {
+    conditions.push('word_type = ?');
+    params.push(word_type);
+  }
+  if (is_phrase === 'true') {
+    conditions.push("word LIKE '% %'");
+  } else if (is_phrase === 'false') {
+    conditions.push("word NOT LIKE '% %'");
+  }
+
+  const [strictRows] = await pool.query(
+    `SELECT id, meaning FROM vocabulary WHERE ${conditions.join(' AND ')} ORDER BY RAND() LIMIT ?`,
+    [...params, n]
   );
-  res.json(rows);
+
+  if (strictRows.length >= n) {
+    return res.json(strictRows);
+  }
+
+  // Not enough same-type/phrase words in the DB yet — top up with any
+  // other random word so the quiz still shows the full option count.
+  const excludeIds = [excludeId, ...strictRows.map((r) => r.id)];
+  const [fallbackRows] = await pool.query(
+    'SELECT id, meaning FROM vocabulary WHERE id NOT IN (?) ORDER BY RAND() LIMIT ?',
+    [excludeIds, n - strictRows.length]
+  );
+
+  res.json([...strictRows, ...fallbackRows]);
 }
 
 async function deleteVocab(req, res) {

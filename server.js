@@ -4,6 +4,7 @@ const path = require('path');
 const vocabRoutes = require('./routes/vocab');
 const docsRoutes = require('./routes/docs');
 const dictionaryRoutes = require('./routes/dictionary');
+const translateRoutes = require('./routes/translate');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,6 +14,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/vocab', vocabRoutes);
 app.use('/api/docs', docsRoutes);
 app.use('/api/dictionary', dictionaryRoutes);
+app.use('/api/translate', translateRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);

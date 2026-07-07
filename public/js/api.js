@@ -48,8 +48,11 @@ const api = {
     return res.json();
   },
 
-  async randomDistractors(excludeId, count) {
-    const res = await fetch(`/api/vocab/random?exclude_id=${excludeId}&count=${count}`);
+  async randomDistractors(excludeId, count, wordType, isPhrase) {
+    const params = new URLSearchParams({ exclude_id: excludeId, count });
+    if (wordType) params.set('word_type', wordType);
+    if (isPhrase !== undefined) params.set('is_phrase', isPhrase);
+    const res = await fetch(`/api/vocab/random?${params.toString()}`);
     return res.json();
   },
 

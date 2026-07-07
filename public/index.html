@@ -17,6 +17,7 @@
       <button class="tab-btn" data-tab="by-date">Xem theo lần nạp</button>
       <button class="tab-btn" data-tab="skill">Kỹ năng</button>
       <button class="tab-btn" data-tab="dictionary">Từ điển</button>
+      <button class="tab-btn" data-tab="translate">Dịch thuật</button>
     </nav>
   </header>
 
@@ -87,11 +88,29 @@
     <!-- TAB: Từ điển -->
     <section id="tab-dictionary" class="tab-panel">
       <h2>Từ điển</h2>
+      <div class="mode-switch">
+        <button class="mode-btn dict-dir-btn" data-dir="en-vi">Anh → Việt</button>
+        <button class="mode-btn dict-dir-btn" data-dir="vi-en">Việt → Anh</button>
+      </div>
       <div class="dictionary-search">
         <input type="text" id="dictionary-input" placeholder="Nhập từ tiếng Anh cần tra (vd: abandon)..." />
         <button id="dictionary-search-btn" class="btn-primary">Tra từ</button>
       </div>
       <div id="dictionary-result"></div>
+    </section>
+
+    <!-- TAB: Dịch thuật -->
+    <section id="tab-translate" class="tab-panel">
+      <h2>Dịch thuật</h2>
+      <div class="mode-switch">
+        <button class="mode-btn translate-dir-btn" data-dir="en-vi">Anh → Việt</button>
+        <button class="mode-btn translate-dir-btn" data-dir="vi-en">Việt → Anh</button>
+      </div>
+      <textarea id="translate-input" rows="6" maxlength="500" placeholder="Nhập văn bản tiếng Anh cần dịch (tối đa 500 ký tự)..."></textarea>
+      <div class="actions">
+        <button id="translate-btn" class="btn-primary">Dịch</button>
+      </div>
+      <div id="translate-output"></div>
     </section>
 
   </main>
@@ -105,6 +124,7 @@
 <script src="js/tabByDate.js"></script>
 <script src="js/tabSkill.js"></script>
 <script src="js/tabDictionary.js"></script>
+<script src="js/tabTranslate.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

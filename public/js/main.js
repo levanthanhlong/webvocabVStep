@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (btn.dataset.tab === 'by-date') tabByDate.init();
       if (btn.dataset.tab === 'skill') tabSkill.init();
       if (btn.dataset.tab === 'dictionary') tabDictionary.init();
+      if (btn.dataset.tab === 'translate') tabTranslate.init();
     });
   });
 

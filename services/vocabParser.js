@@ -21,6 +21,27 @@ function diagnoseLine(line) {
 }
 
 /**
+ * Prepends "N. " to lines missing the leading number, so pasted lists
+ * don't require manual numbering. Continuation lines ("-> example" on its
+ * own line) are left untouched since they attach to the entry above, not
+ * a new entry. Lines that already have a number keep it, and auto-numbers
+ * continue after the highest existing number to avoid collisions.
+ */
+function autoNumberLines(rawLines) {
+  let counter = rawLines.reduce((max, line) => {
+    const match = line.match(/^(\d+)\./);
+    return match ? Math.max(max, parseInt(match[1], 10) + 1) : max;
+  }, 1);
+
+  return rawLines.map((line) => {
+    if (/^\d+\./.test(line) || /^->/.test(line)) return line;
+    const numbered = `${counter}. ${line}`;
+    counter += 1;
+    return numbered;
+  });
+}
+
+/**
  * Joins an entry line with a following "-> example" line, so the example
  * may be written on its own line instead of at the end of the entry line.
  */
@@ -49,7 +70,7 @@ function mergeContinuationLines(rawLines) {
  */
 function parseVocabText(text) {
   const rawLines = text.split('\n').map((l) => l.trim()).filter(Boolean);
-  const lines = mergeContinuationLines(rawLines);
+  const lines = mergeContinuationLines(autoNumberLines(rawLines));
   const entries = [];
   const errors = [];
 
