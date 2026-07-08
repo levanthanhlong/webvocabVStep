@@ -2,6 +2,7 @@ const tabDictionary = {
   state: {
     direction: localStorage.getItem('dictDirection') || 'en-vi',
   },
+  suggestTimer: null,
 
   init() {
     const btn = document.getElementById('dictionary-search-btn');
@@ -17,14 +18,32 @@ const tabDictionary = {
         this.updatePlaceholder();
         document.getElementById('dictionary-input').value = '';
         document.getElementById('dictionary-result').innerHTML = '';
+        document.getElementById('dictionary-suggestions').innerHTML = '';
       });
     });
     this.updatePlaceholder();
 
     btn.addEventListener('click', () => this.search());
-    document.getElementById('dictionary-input').addEventListener('keydown', (e) => {
+    const input = document.getElementById('dictionary-input');
+    input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') this.search();
     });
+    input.addEventListener('input', () => {
+      clearTimeout(this.suggestTimer);
+      this.suggestTimer = setTimeout(() => this.updateSuggestions(input.value.trim()), 200);
+    });
+  },
+
+  async updateSuggestions(prefix) {
+    const datalist = document.getElementById('dictionary-suggestions');
+    if (!prefix) {
+      datalist.innerHTML = '';
+      return;
+    }
+
+    const field = this.state.direction === 'en-vi' ? 'word' : 'meaning';
+    const suggestions = await api.suggestWords(prefix, field);
+    datalist.innerHTML = suggestions.map((s) => `<option value="${this.escape(s)}"></option>`).join('');
   },
 
   updatePlaceholder() {

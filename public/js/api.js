@@ -14,6 +14,11 @@ const api = {
     return res.json();
   },
 
+  async suggestWords(prefix, field) {
+    const res = await fetch(`/api/vocab/suggest?prefix=${encodeURIComponent(prefix)}&field=${field}`);
+    return res.json();
+  },
+
   async listImportBatches() {
     const res = await fetch('/api/vocab/batches');
     return res.json();

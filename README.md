@@ -91,9 +91,12 @@ webvocab/
 │   ├── listening.md
 │   ├── writing.md
 │   └── speaking.md
+├── data/
+│   └── common-english-words.txt # ~10k từ tiếng Anh thông dụng, dùng để gợi ý ở tab Từ điển
 ├── services/
 │   ├── vocabParser.js           # Parse text nạp từ theo regex
-│   └── dictionaryService.js     # Gọi Free Dictionary API (IPA + định nghĩa) + MyMemory (nghĩa tiếng Việt)
+│   ├── dictionaryService.js     # Gọi Free Dictionary API (IPA + định nghĩa) + MyMemory (nghĩa tiếng Việt)
+│   └── wordListService.js       # Tra prefix trong data/common-english-words.txt
 ├── controllers/
 │   ├── vocabController.js
 │   ├── docsController.js        # Đọc file trong docs/
@@ -143,7 +146,7 @@ Dòng sai định dạng sẽ bị bỏ qua và báo lỗi kèm số dòng, khô
 | **Học thuộc theo lần nạp** | Chọn lần nạp, học theo lô 10 từ/lần với 5 chế độ: Flashcard / Trắc nghiệm / Điền từ vào câu / Bài test / Ôn lại — mỗi chế độ đều hiện kèm loại từ (n/v/adj...) |
 | **Xem theo lần nạp** | Xem toàn bộ từ của 1 lần nạp cụ thể, không giới hạn. Có nút "Học lại từ đầu (lần này)" để reset tiến độ 3 chế độ về 0, "Xóa cả lần nạp này" nếu nạp nhầm, chọn nhiều từ (checkbox) để xóa hàng loạt, và xóa từng từ riêng lẻ (🗑) — có ở cả tab này lẫn "Danh sách từ vựng" |
 | **Kỹ năng** | 4 tab con Reading / Listening / Writing / Speaking, hiển thị nội dung từ file tương ứng trong thư mục `docs/` (bạn tự chỉnh sửa nội dung, hiển thị dạng text thuần) |
-| **Từ điển** | Tra 2 chiều Anh↔Việt, bất kỳ từ nào (không giới hạn trong DB của bạn), trả về **nhiều nghĩa** (tối đa 5) chứ không chỉ 1. Anh→Việt: IPA, các nghĩa tiếng Việt, định nghĩa tiếng Anh theo loại từ, ví dụ, từ đồng nghĩa. Việt→Anh: các bản dịch tiếng Anh, tự tra thêm định nghĩa/IPA cho bản dịch đầu tiên nếu khớp từ điển. Đổi chiều sẽ xóa input/kết quả cũ. Chỉ để tra cứu tham khảo, không lưu vào DB |
+| **Từ điển** | Tra 2 chiều Anh↔Việt, bất kỳ từ nào (không giới hạn trong DB của bạn), trả về **nhiều nghĩa** (tối đa 5) chứ không chỉ 1. Anh→Việt: IPA, các nghĩa tiếng Việt, định nghĩa tiếng Anh theo loại từ, ví dụ, từ đồng nghĩa. Việt→Anh: các bản dịch tiếng Anh, tự tra thêm định nghĩa/IPA cho bản dịch đầu tiên nếu khớp từ điển. Gõ tới đâu gợi ý từ có sẵn trong DB của bạn tới đó. Đổi chiều sẽ xóa input/kết quả cũ. Chỉ để tra cứu tham khảo, không lưu vào DB |
 | **Dịch thuật** | Dịch cả đoạn văn bản (không chỉ 1 từ) 2 chiều Anh↔Việt, tối đa 500 ký tự/lần |
 
 Chế độ học được lưu vào `localStorage` để giữ nguyên lựa chọn ở lần sau.
@@ -168,6 +171,7 @@ GET    /api/vocab/study/batch?batch=&mode=       Lô 10 từ chưa xong ở đú
 GET    /api/vocab/review/batch?count=           N từ ngẫu nhiên đã "Đã thuộc" trong toàn bộ DB để ôn lại
 POST   /api/vocab/study/mark                    Body { id, mode, done } — mode: flashcard/quiz/fill/all
 GET    /api/vocab/random?exclude_id=&count=&word_type=&is_phrase=   N từ ngẫu nhiên làm đáp án nhiễu (trắc nghiệm) — ưu tiên cùng word_type và cùng dạng cụm/từ đơn; không đủ thì lấy thêm từ bất kỳ
+GET    /api/vocab/suggest?prefix=&field=                            Gợi ý từ khi gõ ở tab Từ điển — field=word: DB của bạn trước, thiếu thì lấp bằng data/common-english-words.txt (~10k từ thông dụng); field=meaning: chỉ DB (Việt→Anh)
 PUT    /api/vocab/:id                           Sửa tay phiên âm IPA hoặc thông tin từ
 DELETE /api/vocab/:id                           Xóa 1 từ
 POST   /api/vocab/bulk-delete                   Body { ids: [...] } — xóa nhiều từ cùng lúc

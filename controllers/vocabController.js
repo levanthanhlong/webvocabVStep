@@ -1,6 +1,7 @@
 const pool = require('../config/db');
 const { parseVocabText } = require('../services/vocabParser');
 const { fetchIpaPhonetic } = require('../services/dictionaryService');
+const { suggestFromWordList } = require('../services/wordListService');
 
 const LEVEL_COLUMNS = { flashcard: 'flashcard_done', quiz: 'quiz_done', fill: 'fill_done' };
 const STATUS_CASE = `CASE WHEN flashcard_done = 1 AND quiz_done = 1 AND fill_done = 1 THEN 'memorized' ELSE 'new' END AS status`;
@@ -66,6 +67,37 @@ async function listVocab(req, res) {
     [rows] = await pool.query(`SELECT *, ${STATUS_CASE} FROM vocabulary ORDER BY word ASC`);
   }
   res.json(rows);
+}
+
+async function suggestWords(req, res) {
+  const { prefix, field } = req.query;
+  if (!prefix || !prefix.trim()) return res.json([]);
+
+  const trimmed = prefix.trim();
+  const column = field === 'meaning' ? 'meaning' : 'word';
+  const LIMIT = 8;
+
+  const [rows] = await pool.query(
+    `SELECT DISTINCT ${column} AS value FROM vocabulary WHERE ${column} LIKE ? ORDER BY ${column} ASC LIMIT ?`,
+    [`${trimmed}%`, LIMIT]
+  );
+  const dbSuggestions = rows.map((r) => r.value);
+
+  // Vietnamese meanings have no bundled word list to fall back on, and no
+  // need to fill up once the DB already has enough matches.
+  if (column !== 'word' || dbSuggestions.length >= LIMIT) {
+    return res.json(dbSuggestions);
+  }
+
+  // Fill remaining slots with common English words the user hasn't
+  // imported yet, so suggestions aren't limited to their own vocab list.
+  const remaining = LIMIT - dbSuggestions.length;
+  const seen = new Set(dbSuggestions.map((w) => w.toLowerCase()));
+  const wordListMatches = suggestFromWordList(trimmed, remaining + seen.size)
+    .filter((w) => !seen.has(w.toLowerCase()))
+    .slice(0, remaining);
+
+  res.json([...dbSuggestions, ...wordListMatches]);
 }
 
 async function listImportBatches(req, res) {
@@ -235,6 +267,7 @@ async function updateVocab(req, res) {
 module.exports = {
   importVocab,
   listVocab,
+  suggestWords,
   listImportBatches,
   listByImportBatch,
   resetImportBatch,

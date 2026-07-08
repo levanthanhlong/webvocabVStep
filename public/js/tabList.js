@@ -28,19 +28,23 @@ const tabList = {
     return `
       <div class="vocab-card" data-id="${w.id}">
         <div class="vocab-card-top">
-          ${checkbox}
-          <span class="vocab-word">${w.word}</span>
-          <button class="speak-btn" data-speak="${this.escape(w.word)}">🔊</button>
-          <span class="vocab-phonetic">/${w.phonetic || ''}/</span>
-          <span class="ipa-edit">
-            <span class="vocab-phonetic ipa-display">${w.phonetic_ipa || '(chưa có IPA)'}</span>
-            <button class="btn-secondary ipa-edit-btn" data-id="${w.id}" style="padding:2px 8px;font-size:0.75rem;">Sửa</button>
-          </span>
-          <span class="vocab-type">${w.word_type || ''}</span>
-          <button class="status-badge ${w.status}" data-id="${w.id}" data-status="${w.status}">
-            ${w.status === 'memorized' ? 'Đã thuộc' : 'Chưa thuộc'}
-          </button>
-          <button class="delete-btn" data-id="${w.id}" title="Xóa từ này">🗑</button>
+          <div class="vocab-card-main">
+            ${checkbox}
+            <span class="vocab-word">${w.word}</span>
+            <button class="speak-btn" data-speak="${this.escape(w.word)}">🔊</button>
+            <span class="vocab-phonetic">/${w.phonetic || ''}/</span>
+            <span class="ipa-edit">
+              <span class="vocab-phonetic ipa-display">${w.phonetic_ipa || '(chưa có IPA)'}</span>
+              <button class="btn-secondary ipa-edit-btn" data-id="${w.id}" style="padding:2px 8px;font-size:0.75rem;">Sửa</button>
+            </span>
+            <span class="vocab-type">${w.word_type || ''}</span>
+          </div>
+          <div class="vocab-card-actions">
+            <button class="status-badge ${w.status}" data-id="${w.id}" data-status="${w.status}">
+              ${w.status === 'memorized' ? 'Đã thuộc' : 'Chưa thuộc'}
+            </button>
+            <button class="delete-btn" data-id="${w.id}" title="Xóa từ này">🗑</button>
+          </div>
         </div>
         <div class="vocab-meaning">${w.meaning}</div>
         <div class="vocab-example">

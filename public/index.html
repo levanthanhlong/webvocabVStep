@@ -93,7 +93,8 @@
         <button class="mode-btn dict-dir-btn" data-dir="vi-en">Việt → Anh</button>
       </div>
       <div class="dictionary-search">
-        <input type="text" id="dictionary-input" placeholder="Nhập từ tiếng Anh cần tra (vd: abandon)..." />
+        <input type="text" id="dictionary-input" list="dictionary-suggestions" autocomplete="off" placeholder="Nhập từ tiếng Anh cần tra (vd: abandon)..." />
+        <datalist id="dictionary-suggestions"></datalist>
         <button id="dictionary-search-btn" class="btn-primary">Tra từ</button>
       </div>
       <div id="dictionary-result"></div>

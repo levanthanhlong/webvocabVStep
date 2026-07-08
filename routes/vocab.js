@@ -12,6 +12,7 @@ router.get('/review/batch', vocabController.reviewBatch);
 router.post('/study/mark', vocabController.markStudy);
 router.post('/bulk-delete', vocabController.bulkDeleteVocab);
 router.get('/random', vocabController.randomDistractors);
+router.get('/suggest', vocabController.suggestWords);
 router.get('/', vocabController.listVocab);
 router.put('/:id', vocabController.updateVocab);
 router.delete('/:id', vocabController.deleteVocab);

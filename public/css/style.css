@@ -177,9 +177,26 @@ textarea { resize: vertical; }
 
 .vocab-card-top {
   display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.vocab-card-main {
+  display: flex;
   align-items: baseline;
   gap: 10px;
   flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.vocab-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .vocab-word {
@@ -208,7 +225,6 @@ textarea { resize: vertical; }
 .speak-btn:hover { transform: scale(1.15); }
 
 .status-badge {
-  margin-left: auto;
   font-size: 0.78rem;
   padding: 3px 10px;
   border-radius: 20px;
@@ -263,7 +279,7 @@ textarea { resize: vertical; }
 }
 .study-controls select { width: auto; min-width: 220px; }
 
-.mode-switch { display: flex; gap: 6px; }
+.mode-switch { display: flex; gap: 6px; margin-bottom: 18px; }
 .mode-btn {
   border: 1px solid var(--color-border);
   background: var(--color-surface);
@@ -459,6 +475,41 @@ textarea { resize: vertical; }
 }
 
 @media (max-width: 600px) {
-  .app-header h1 { font-size: 1.6rem; }
+  .app-shell { padding: 0 14px 40px; }
+  .app-header { padding: 20px 0 12px; }
+  .app-header h1 { font-size: 1.5rem; margin-bottom: 12px; }
+  .app-main { padding-top: 18px; }
+  h2 { font-size: 1.25rem; }
+
+  /* Scroll horizontally instead of wrapping into several rows, which used
+     to push all page content far below the fold on narrow screens. */
+  .tab-nav,
+  .mode-switch {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  .tab-nav::-webkit-scrollbar,
+  .mode-switch::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 8px 12px;
+    font-size: 0.88rem;
+  }
+
+  .mode-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
   .study-stage { padding: 20px; }
+  .stage-word { font-size: 1.6rem; }
+
+  .dict-entry, .modal-box { padding: 16px 18px; }
+
+  .vocab-card { padding: 14px; }
 }
