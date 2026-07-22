@@ -15,7 +15,7 @@ const tabStudy = {
     const batches = await api.listImportBatches();
 
     batchSelect.innerHTML = batches
-      .map((b) => `<option value="${b.import_batch}">Lần ${b.import_batch} — ${this.formatDate(b.import_date)} (${b.total} từ)</option>`)
+      .map((b) => `<option value="${b.import_batch}">${this.formatBatchLabel(b)}</option>`)
       .join('');
 
     if (!batchSelect.dataset.bound) {
@@ -50,6 +50,11 @@ const tabStudy = {
   formatDate(isoDate) {
     const [y, m, d] = String(isoDate).slice(0, 10).split('-');
     return `${d}/${m}/${y}`;
+  },
+
+  formatBatchLabel(b) {
+    const namePart = b.batch_name ? `: ${b.batch_name}` : '';
+    return `Lần ${b.import_batch}${namePart} — ${this.formatDate(b.import_date)} (${b.total} từ)`;
   },
 
   async loadBatchForImport(importBatch) {

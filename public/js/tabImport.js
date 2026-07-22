@@ -8,6 +8,7 @@ const tabImport = {
 
   async handleSubmit() {
     const textarea = document.getElementById('import-textarea');
+    const nameInput = document.getElementById('import-batch-name');
     const statusEl = document.getElementById('import-status');
     const resultEl = document.getElementById('import-result');
     const submitBtn = document.getElementById('import-submit');
@@ -20,10 +21,10 @@ const tabImport = {
     resultEl.innerHTML = '';
 
     try {
-      const { imported, errors, importBatch } = await api.importVocab(text);
+      const { imported, errors, importBatch, batchName } = await api.importVocab(text, nameInput.value.trim());
 
       statusEl.textContent = imported.length
-        ? `Đã nạp ${imported.length} từ vào Lần ${importBatch}, ${errors.length} dòng lỗi.`
+        ? `Đã nạp ${imported.length} từ vào Lần ${importBatch}${batchName ? ` "${batchName}"` : ''}, ${errors.length} dòng lỗi.`
         : `Đã nạp 0 từ, ${errors.length} dòng lỗi.`;
 
       let html = '';
@@ -39,7 +40,10 @@ const tabImport = {
       }
       resultEl.innerHTML = html;
 
-      if (imported.length) textarea.value = '';
+      if (imported.length) {
+        textarea.value = '';
+        nameInput.value = '';
+      }
     } catch (err) {
       statusEl.textContent = 'Lỗi khi nạp từ vựng. Vui lòng thử lại.';
     } finally {

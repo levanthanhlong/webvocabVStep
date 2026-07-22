@@ -27,6 +27,7 @@
     <section id="tab-import" class="tab-panel active">
       <h2>Nạp từ vựng mới</h2>
       <p class="hint">Dán nguyên khối theo định dạng: <code>N. word /phiên âm/ (loại từ): nghĩa -&gt; ví dụ</code></p>
+      <input type="text" id="import-batch-name" class="search-input" placeholder="Tên cho lần nạp này (tuỳ chọn, vd: Từ vựng Unit 3)..." />
       <textarea id="import-textarea" rows="12" placeholder="1. abandon /ơ-ben-đần/ (v): từ bỏ -> He abandoned the project."></textarea>
       <div class="actions">
         <button id="import-submit" class="btn-primary">Nạp vào hệ thống</button>
@@ -64,6 +65,7 @@
       <h2>Xem theo lần nạp</h2>
       <div class="study-controls">
         <select id="by-date-select"></select>
+        <button id="rename-batch-btn" class="btn-secondary">Đổi tên</button>
         <button id="reset-batch-btn" class="btn-secondary">Học lại từ đầu (lần này)</button>
         <button id="delete-batch-btn" class="btn-secondary">Xóa cả lần nạp này</button>
       </div>
@@ -80,7 +82,9 @@
         <button class="mode-btn" data-skill="reading">Reading</button>
         <button class="mode-btn" data-skill="listening">Listening</button>
         <button class="mode-btn" data-skill="writing">Writing</button>
+        <button class="mode-btn" data-skill="writing-ideas">Writing Ideas</button>
         <button class="mode-btn" data-skill="speaking">Speaking</button>
+        <button class="mode-btn" data-skill="bonus">Bonus</button>
       </div>
       <div id="skill-content" class="skill-content"></div>
     </section>

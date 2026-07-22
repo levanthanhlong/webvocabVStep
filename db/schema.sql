@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS vocabulary (
   example TEXT,
   import_date DATE NOT NULL,
   import_batch INT NOT NULL,
+  batch_name VARCHAR(255) NULL,
   flashcard_done TINYINT(1) NOT NULL DEFAULT 0,
   quiz_done TINYINT(1) NOT NULL DEFAULT 0,
   fill_done TINYINT(1) NOT NULL DEFAULT 0,

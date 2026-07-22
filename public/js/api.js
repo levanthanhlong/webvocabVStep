@@ -1,9 +1,9 @@
 const api = {
-  async importVocab(text) {
+  async importVocab(text, batchName) {
     const res = await fetch('/api/vocab/import', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, batchName }),
     });
     return res.json();
   },
@@ -31,6 +31,15 @@ const api = {
 
   async resetImportBatch(batch) {
     const res = await fetch(`/api/vocab/by-batch/${batch}/reset`, { method: 'POST' });
+    return res.json();
+  },
+
+  async renameImportBatch(batch, name) {
+    const res = await fetch(`/api/vocab/by-batch/${batch}/name`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name }),
+    });
     return res.json();
   },
 

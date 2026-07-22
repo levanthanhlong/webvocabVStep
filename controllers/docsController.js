@@ -5,7 +5,9 @@ const SKILL_FILES = {
   reading: 'reading.md',
   listening: 'listening.md',
   writing: 'writing.md',
+  'writing-ideas': 'writing-ideas.md',
   speaking: 'speaking.md',
+  bonus: 'bonus.md',
 };
 
 const DOCS_DIR = path.join(__dirname, '..', 'docs');

@@ -1,15 +1,25 @@
 const tabByDate = {
-  async init() {
+  async init(selectBatch) {
     const select = document.getElementById('by-date-select');
     const batches = await api.listImportBatches();
+    this.batches = batches;
 
     select.innerHTML = batches
-      .map((b) => `<option value="${b.import_batch}">Lần ${b.import_batch} — ${this.formatDate(b.import_date)} (${b.total} từ)</option>`)
+      .map((b) => `<option value="${b.import_batch}">${this.formatBatchLabel(b)}</option>`)
       .join('');
+    if (selectBatch && batches.some((b) => String(b.import_batch) === String(selectBatch))) {
+      select.value = selectBatch;
+    }
 
     if (!select.dataset.bound) {
       select.dataset.bound = '1';
       select.addEventListener('change', () => this.load(select.value));
+    }
+
+    const renameBtn = document.getElementById('rename-batch-btn');
+    if (!renameBtn.dataset.bound) {
+      renameBtn.dataset.bound = '1';
+      renameBtn.addEventListener('click', () => this.renameCurrentBatch(select));
     }
 
     const resetBtn = document.getElementById('reset-batch-btn');
@@ -35,6 +45,17 @@ const tabByDate = {
       document.getElementById('by-date-container').innerHTML = '<p class="stage-empty">Chưa có lần nạp nào.</p>';
       this.updateSelectedCount();
     }
+  },
+
+  async renameCurrentBatch(select) {
+    const batch = select.value;
+    if (!batch) return;
+    const current = (this.batches || []).find((b) => String(b.import_batch) === String(batch));
+    const input = window.prompt('Đặt tên cho lần nạp này (để trống để bỏ tên):', current?.batch_name || '');
+    if (input === null) return;
+
+    await api.renameImportBatch(batch, input.trim());
+    await this.init(batch);
   },
 
   async resetCurrentBatch(select) {
@@ -82,6 +103,11 @@ const tabByDate = {
   formatDate(isoDate) {
     const [y, m, d] = String(isoDate).slice(0, 10).split('-');
     return `${d}/${m}/${y}`;
+  },
+
+  formatBatchLabel(b) {
+    const namePart = b.batch_name ? `: ${b.batch_name}` : '';
+    return `Lần ${b.import_batch}${namePart} — ${this.formatDate(b.import_date)} (${b.total} từ)`;
   },
 
   async load(batch) {

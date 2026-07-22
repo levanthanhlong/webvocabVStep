@@ -6,6 +6,7 @@ router.post('/import', vocabController.importVocab);
 router.get('/batches', vocabController.listImportBatches);
 router.get('/by-batch/:batch', vocabController.listByImportBatch);
 router.post('/by-batch/:batch/reset', vocabController.resetImportBatch);
+router.put('/by-batch/:batch/name', vocabController.renameImportBatch);
 router.delete('/by-batch/:batch', vocabController.deleteImportBatch);
 router.get('/study/batch', vocabController.studyBatch);
 router.get('/review/batch', vocabController.reviewBatch);

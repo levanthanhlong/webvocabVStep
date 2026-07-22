@@ -15,20 +15,21 @@ function todayDate() {
 }
 
 async function importVocab(req, res) {
-  const { text } = req.body;
+  const { text, batchName } = req.body;
   if (!text || !text.trim()) {
     return res.status(400).json({ error: 'Thiếu nội dung để nạp' });
   }
 
   const { entries, errors } = parseVocabText(text);
   const importDate = todayDate();
+  const name = batchName && batchName.trim() ? batchName.trim() : null;
   const imported = [];
 
   const [[{ nextBatch }]] = await pool.query(
     'SELECT COALESCE(MAX(import_batch), 0) + 1 AS nextBatch FROM vocabulary'
   );
 
-  console.log(`[Import] Nhận ${entries.length} dòng hợp lệ, ${errors.length} dòng lỗi (Lần ${nextBatch}, ngày ${importDate})`);
+  console.log(`[Import] Nhận ${entries.length} dòng hợp lệ, ${errors.length} dòng lỗi (Lần ${nextBatch}${name ? ` "${name}"` : ''}, ngày ${importDate})`);
   errors.forEach((e) => console.log(`[Import]   ✗ Dòng ${e.line}: "${e.text}" — ${e.reason}`));
 
   for (const entry of entries) {
@@ -41,9 +42,9 @@ async function importVocab(req, res) {
     );
 
     const [result] = await pool.query(
-      `INSERT INTO vocabulary (word, phonetic, phonetic_ipa, word_type, meaning, example, import_date, import_batch)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [entry.word, entry.phonetic, phoneticIpa, entry.word_type, entry.meaning, entry.example, importDate, nextBatch]
+      `INSERT INTO vocabulary (word, phonetic, phonetic_ipa, word_type, meaning, example, import_date, import_batch, batch_name)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [entry.word, entry.phonetic, phoneticIpa, entry.word_type, entry.meaning, entry.example, importDate, nextBatch, name]
     );
     imported.push({ id: result.insertId, ...entry, phonetic_ipa: phoneticIpa, import_date: importDate, import_batch: nextBatch });
     console.log(`[Import]   → Đã lưu id=${result.insertId}: "${entry.word}"`);
@@ -51,7 +52,7 @@ async function importVocab(req, res) {
 
   console.log(`[Import] Hoàn tất: đã nạp ${imported.length}/${entries.length} từ vào Lần ${nextBatch}`);
 
-  res.json({ imported, errors, importDate, importBatch: nextBatch });
+  res.json({ imported, errors, importDate, importBatch: nextBatch, batchName: name });
 }
 
 async function listVocab(req, res) {
@@ -102,12 +103,21 @@ async function suggestWords(req, res) {
 
 async function listImportBatches(req, res) {
   const [rows] = await pool.query(
-    `SELECT import_batch, MIN(import_date) AS import_date, COUNT(*) AS total
+    `SELECT import_batch, MIN(import_date) AS import_date, MAX(batch_name) AS batch_name, COUNT(*) AS total
      FROM vocabulary
      GROUP BY import_batch
      ORDER BY import_batch DESC`
   );
   res.json(rows);
+}
+
+async function renameImportBatch(req, res) {
+  const { batch } = req.params;
+  const { name } = req.body;
+  const trimmed = name && name.trim() ? name.trim() : null;
+
+  await pool.query('UPDATE vocabulary SET batch_name = ? WHERE import_batch = ?', [trimmed, batch]);
+  res.json({ success: true, batch_name: trimmed });
 }
 
 async function listByImportBatch(req, res) {
@@ -271,6 +281,7 @@ module.exports = {
   listImportBatches,
   listByImportBatch,
   resetImportBatch,
+  renameImportBatch,
   studyBatch,
   reviewBatch,
   markStudy,
